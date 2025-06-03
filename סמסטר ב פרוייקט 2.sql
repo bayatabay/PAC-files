@@ -1,6 +1,6 @@
---**фъшеп фшеййчи осфш 2**
+--**Ч¤ЧЁЧ•Ч™Ч™Ч§Ч ЧћЧЎЧ¤ЧЁ 2**
 
---ъщебд мщамд 1 
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 1 
 WITH YearlySales AS (
     SELECT YEAR(i.InvoiceDate) AS Year, SUM(il.Quantity * il.UnitPrice) AS AnnualSales
     FROM Sales.InvoiceLines il JOIN Sales.Invoices i ON il.InvoiceID = i.InvoiceID
@@ -19,7 +19,7 @@ SELECT ys.Year, ys.AnnualSales, li.LinearIncome,li.NumberOfDistinctMonths,
 FROM YearlySales ys JOIN LinearIncome li ON ys.Year = li.Year
 ORDER BY ys.Year;
 
---ъщебд мщамд 2
+----ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 2 
 WITH QuarterlySales AS (
     SELECT YEAR(i.InvoiceDate) AS Year, DATEPART(QUARTER, i.InvoiceDate) AS Quarter, i.CustomerID,
         SUM(il.Quantity * il.UnitPrice - il.TaxAmount) AS NetIncome 
@@ -40,7 +40,7 @@ JOIN Sales.Customers c ON rc.CustomerID = c.CustomerID
 WHERE rc.RowNum <= 5
 ORDER BY rc.Year, rc.Quarter, rc.RowNum;
 
---ъщебд мщамд 3
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 3
 WITH ProductProfit AS (
  SELECT il.StockItemID, si.StockItemName,SUM(il.ExtendedPrice - il.TaxAmount) AS TotalProfit 
     FROM Sales.InvoiceLines il JOIN Warehouse.StockItems si ON il.StockItemID = si.StockItemID 
@@ -50,7 +50,7 @@ SELECT TOP 10 pp.StockItemID, pp.StockItemName,pp.TotalProfit
 FROM ProductProfit pp
 ORDER BY pp.TotalProfit DESC;
 
---ъщебд мщамд 4
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 4
 SELECT 
     ROW_NUMBER() OVER (ORDER BY (si.RecommendedRetailPrice - si.UnitPrice) DESC) AS Rn,
     si.StockItemID, si.StockItemName, si.UnitPrice, si.RecommendedRetailPrice, 
@@ -60,14 +60,14 @@ FROM Warehouse.StockItems si
 WHERE si.ValidFrom <= GETDATE() AND si.ValidTo >= GETDATE() 
 ORDER BY NominalProfit DESC; 
 
---ъщебд мщамд 5
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 5
 SELECT CONCAT(s.SupplierID, ' - ', s.SupplierName) AS SupplierDetails,
 	   STRING_AGG(CONCAT(si.StockItemID, ' ', si.StockItemName), ', / ') AS ProductsList
 FROM Purchasing.Suppliers s JOIN Warehouse.StockItems si ON s.SupplierID = si.SupplierID
 GROUP BY s.SupplierID, s.SupplierName
 ORDER BY s.SupplierID;
 
---ъщебд мщамд 6
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 6
 SELECT TOP 5 
     c.CustomerID, ci.CityName AS CityName, co.CountryName AS CountryName, co.Continent AS Continent, co.Region AS Region,
     SUM(il.ExtendedPrice) AS TotalExtendedPrice
@@ -80,7 +80,7 @@ GROUP BY c.CustomerID, c.CustomerName, ci.CityName, sp.StateProvinceName, co.Cou
 ORDER BY SUM(il.ExtendedPrice) DESC;
 
 
---ъщебд мщамд 7 
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 7 
 WITH MonthlySales AS (
     SELECT YEAR(o.OrderDate) AS OrderYear, MONTH(o.OrderDate) AS OrderMonth, SUM(ol.Quantity * ol.UnitPrice) AS MonthlyTotal
     FROM [Sales].[OrderLines] ol JOIN [Sales].[Orders] o ON ol.OrderID = o.OrderID
@@ -112,7 +112,7 @@ ORDER BY OrderYear,
     CASE WHEN OrderMonth = 13 THEN 13 ELSE OrderMonth
     END;
 
--- ъщебд мщамд 8
+-- ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 8
 SELECT OrderMonth, [2013], [2014], [2015], [2016] 
 FROM ( 
 	SELECT YEAR(OrderDate) AS OrderYear, MONTH(OrderDate) AS OrderMonth
@@ -123,7 +123,7 @@ PIVOT (
 ) AS PivotedData
 ORDER BY OrderMonth;
 
--- ъщебд мщамд 9
+-- ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 9
 with cte 
 as 
 (select o.CustomerID,c.CustomerName, OrderDate,
@@ -141,7 +141,7 @@ case when AVG(daysSinceLastOrder) over(partition by CustomerID) > diff then 'act
 from cte
 order by 1
 
---ъщебд мщамд 10
+--ЧЄЧ©Ч•Ч‘Ч” ЧњЧ©ЧђЧњЧ” 10
 select *,CAST(customerCount as decimal(5,2))/totalCustCount *100.0
 from 
 (select CustomerCategoryName,count(distinct customerName) as customerCount,
